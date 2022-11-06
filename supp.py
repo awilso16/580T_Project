@@ -43,7 +43,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     #while len(buf2) < 4:
     buf2 += s.recv(4)
     elementB = struct.unpack('!i', buf2[:4])[0]
-    s.close()
+    #s.close()
     print("Auth's elementB is:",elementB)
     ss1 = pow(PEsB * elementB,a,q)
     print("ss1 is", ss1)

@@ -48,8 +48,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             #while len(buf2) < 4:
             buf2 += conn.recv(4)
             elementA = struct.unpack('!i', buf2[:4])[0]
+            conn.close()
             print("Supp's elementA is:", elementA)
-
             ss2 = pow(PEsA * elementA,b,q)
             break
+    s.shutdown(socket.SHUT_RDWR)
+    s.close()
     print("ss2 is", ss2)
