@@ -1,3 +1,5 @@
+#CODE LARGELY FROM HERE: https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwiimfOIhJv7AhWXD1kFHWY2DJQQFnoECA8QAQ&url=https%3A%2F%2Fgithub.com%2FNikolaiT%2FDragonfly-SAE%2Fblob%2Fmaster%2Fdragonfly_implementation.py&usg=AOvVaw0tr58RWYVbIB3P9fZIpCD4
+
 from curve import Curve
 from collections import namedtuple
 import random
@@ -117,7 +119,7 @@ class Peer:
 
         if found == 0:
             #logger.error('No valid point found after {} iterations'.format(k))
-            print('error')
+            print('no valid point found')
         elif found == 1:
             # https://crypto.stackexchange.com/questions/6777/how-to-calculate-y-value-from-yy-mod-prime-efficiently
             # https://rosettacode.org/wiki/Tonelli-Shanks_algorithm
@@ -129,6 +131,7 @@ class Peer:
             assert self.curve.curve_equation(x) == pow(y, 2, self.p)
 
             #logger.info('[{}] Using {}-th valid Point={}'.format(self.name, num_valid_points, PE))
+            print(f'Using valid point x={PE.x} y={PE.y}')
             #logger.info('[{}] Point is on curve: {}'.format(self.name, self.curve.valid(PE)))
 
             self.PE = PE
@@ -214,6 +217,9 @@ class Peer:
         #logger.info('[{}] Scalar={}'.format(self.name, self.scalar))
         #logger.info('[{}] Element={}'.format(self.name, self.element))
 
+        print(f'My scalar is {self.scalar}')
+        print(f'My element is x={self.element.x} y={self.element.y}')
+
         return self.scalar, self.element
 
     def compute_shared_secret(self, peer_element, peer_scalar, peer_mac):
@@ -250,6 +256,7 @@ class Peer:
         self.k = K[0]
 
         #logger.info('[{}] Shared Secret ss={}'.format(self.name, self.k))
+        print(f'Computed shared secret {self.k}')
 
         own_message = '{}{}{}{}{}{}'.format(self.k , self.scalar , self.peer_scalar , self.element[0] , self.peer_element[0] , self.mac_address).encode()
 
@@ -270,7 +277,9 @@ class Peer:
         self.peer_token_computed = H.hexdigest()
 
         #logger.info('[{}] Computed Token from Peer={}'.format(self.name, self.peer_token_computed))
+        print(f'[{self.name}]Computed Token from Peer={self.peer_token_computed}')
         #logger.info('[{}] Received Token from Peer={}'.format(self.name, peer_token))
+        print(f'[{self.name}]Received Token from Peer={peer_token}')
 
         # Pairwise Master Key” (PMK)
         # compute PMK = H(k | scal(AP1) + scal(AP2) mod q)
@@ -327,6 +336,7 @@ class Peer:
         minm = min(self.mac_address, self.other_mac)
         message = '{}{}{}{}'.format(maxm, minm, self.password, counter).encode()
         #logger.debug('Message to hash is: {}'.format(message))
+        print('Message to hash is: {}'.format(message))
         H = hashlib.sha256()
         H.update(message)
         digest = H.digest()

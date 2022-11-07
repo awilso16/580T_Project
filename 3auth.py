@@ -1,3 +1,5 @@
+#CODE BORROWS FROM HERE: https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwiimfOIhJv7AhWXD1kFHWY2DJQQFnoECA8QAQ&url=https%3A%2F%2Fgithub.com%2FNikolaiT%2FDragonfly-SAE%2Fblob%2Fmaster%2Fdragonfly_implementation.py&usg=AOvVaw0tr58RWYVbIB3P9fZIpCD4
+
 import socket
 import random
 import hashlib
@@ -54,6 +56,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             #while len(buf) < 4:
             buf += conn.recv(32)
             scalar_sta = int.from_bytes(buf, 'big')
+            print(f'Received scalar_sta {scalar_sta}')
 
             bufx = b''
             bufx += conn.recv(32)
@@ -64,7 +67,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             element_sta_y = int.from_bytes(bufy, 'big')
 
             element_sta = Point(element_sta_x, element_sta_y)
+            print(f'Received element_sta x={element_sta_x} y={element_sta_y}')
             ap_token = ap.compute_shared_secret(element_sta, scalar_sta, other_mac)
+            print(f'Generated ap_token {ap_token}')
             #TRANSMIT AP TOKEN
             #ap_token_packed = ap_token.to_bytes(32, byteorder='big')
             #conn.sendall(ap_token_packed)
@@ -74,6 +79,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             buf3 += conn.recv(32)
             #sta_token = int.from_bytes(buf3, 'big')
             sta_token = buf3.decode('utf-8')
+            print(f'Received sta_token {sta_token}')
             break
     #s.shutdown(socket.SHUT_RDWR)
     s.close()

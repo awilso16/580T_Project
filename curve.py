@@ -1,3 +1,5 @@
+#CODE LARGELY FROM HERE: https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwiimfOIhJv7AhWXD1kFHWY2DJQQFnoECA8QAQ&url=https%3A%2F%2Fgithub.com%2FNikolaiT%2FDragonfly-SAE%2Fblob%2Fmaster%2Fdragonfly_implementation.py&usg=AOvVaw0tr58RWYVbIB3P9fZIpCD4
+
 from collections import namedtuple
 Point = namedtuple("Point", "x y")
 O = 'Origin'
