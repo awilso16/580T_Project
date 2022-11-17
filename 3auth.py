@@ -76,7 +76,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             conn.sendall(bytes(ap_token,encoding='utf-8'))
             #RECEIVE STA TOKEN
             buf3 = b''
-            buf3 += conn.recv(32)
+            buf3 += conn.recv(64)
             #sta_token = int.from_bytes(buf3, 'big')
             sta_token = buf3.decode('utf-8')
             print(f'Received sta_token {sta_token}')

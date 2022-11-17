@@ -24,7 +24,7 @@ b = int('26DC5C6CE94A4B44F330B5D9BBD77CBF958416295CF7E1CE6BCCDC18FF8C07B6', 16)
 q = int('A9FB57DBA1EEA9BC3E660A909D838D718C397AA3B561A6F7901E0E82974856A7', 16)
 curve = Curve(a, b, p)
 
-password = 'passwor'
+password = 'password'
 my_mac, other_mac = '44:67:2D:2C:91:A6', '44:37:2C:2F:91:36'
 my_name = 'STA'
 
@@ -72,7 +72,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.sendall(bytes(sta_token,encoding='utf-8'))
     #RECEIVE AP TOKEN
     buf2 = b''
-    buf2 += s.recv(32)
+    buf2 += s.recv(64)
     #ap_token = int.from_bytes(buf2, 'big')
     ap_token = buf2.decode('utf-8')
     print(f'Received ap_token {ap_token}')

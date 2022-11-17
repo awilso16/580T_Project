@@ -113,12 +113,10 @@ class Peer:
                     save = base
                     found = 1
                     num_valid_points += 1
-                    #logger.debug('Got point after {} iterations'.format(counter))
 
             counter = counter + 1
 
         if found == 0:
-            #logger.error('No valid point found after {} iterations'.format(k))
             print('no valid point found')
         elif found == 1:
             # https://crypto.stackexchange.com/questions/6777/how-to-calculate-y-value-from-yy-mod-prime-efficiently
@@ -130,9 +128,7 @@ class Peer:
             # check valid point
             assert self.curve.curve_equation(x) == pow(y, 2, self.p)
 
-            #logger.info('[{}] Using {}-th valid Point={}'.format(self.name, num_valid_points, PE))
-            print(f'Using valid point x={PE.x} y={PE.y}')
-            #logger.info('[{}] Point is on curve: {}'.format(self.name, self.curve.valid(PE)))
+            print(f'Using password element x={PE.x} y={PE.y}')
 
             self.PE = PE
             assert self.curve.valid(self.PE)
@@ -161,9 +157,6 @@ class Peer:
         # Otherwise, each party chooses two random numbers, private and mask
         self.private = random.randrange(1, self.p)
         self.mask = random.randrange(1, self.p)
-
-        #logger.debug('[{}] private={}'.format(self.name, self.private))
-        #logger.debug('[{}] mask={}'.format(self.name, self.mask))
 
         # These two secrets and the Password Element are then used to construct
         # the scalar and element:
@@ -213,10 +206,6 @@ class Peer:
         # reflection attack, and the exchange MUST be aborted.  If the values
         # differ, peer-scalar and Peer-Element must be validated.
 
-        #logger.info('[{}] Sending scalar and element to the Peer!'.format(self.name))
-        #logger.info('[{}] Scalar={}'.format(self.name, self.scalar))
-        #logger.info('[{}] Element={}'.format(self.name, self.element))
-
         print(f'My scalar is {self.scalar}')
         print(f'My element is x={self.element.x} y={self.element.y}')
 
@@ -255,7 +244,6 @@ class Peer:
 
         self.k = K[0]
 
-        #logger.info('[{}] Shared Secret ss={}'.format(self.name, self.k))
         print(f'Computed shared secret {self.k}')
 
         own_message = '{}{}{}{}{}{}'.format(self.k , self.scalar , self.peer_scalar , self.element[0] , self.peer_element[0] , self.mac_address).encode()
@@ -275,11 +263,6 @@ class Peer:
         H = hashlib.sha256()
         H.update(peer_message)
         self.peer_token_computed = H.hexdigest()
-
-        #logger.info('[{}] Computed Token from Peer={}'.format(self.name, self.peer_token_computed))
-        print(f'[{self.name}]Computed Token from Peer={self.peer_token_computed}')
-        #logger.info('[{}] Received Token from Peer={}'.format(self.name, peer_token))
-        print(f'[{self.name}]Received Token from Peer={peer_token}')
 
         # Pairwise Master Key” (PMK)
         # compute PMK = H(k | scal(AP1) + scal(AP2) mod q)
@@ -313,7 +296,6 @@ class Peer:
 
         assert len(binary_repr) == n
 
-        #logger.debug('Rand={}'.format(binary_repr))
 
         # Convert returned_bits to the non-negative integer c (see Appendix C.2.1).
         C = 0
@@ -321,13 +303,9 @@ class Peer:
             if int(binary_repr[i]) == 1:
                 C += pow(2, n-i)
 
-        #logger.debug('C={}'.format(C))
-
         #k = (C % (n - 1)) + 1
 
         k = C
-
-        #logger.debug('k={}'.format(k))
 
         return k
 
@@ -335,8 +313,6 @@ class Peer:
         maxm = max(self.mac_address, self.other_mac)
         minm = min(self.mac_address, self.other_mac)
         message = '{}{}{}{}'.format(maxm, minm, self.password, counter).encode()
-        #logger.debug('Message to hash is: {}'.format(message))
-        print('Message to hash is: {}'.format(message))
         H = hashlib.sha256()
         H.update(message)
         digest = H.digest()
